@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrient Requirements</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Add Bootstrap for responsive design -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script type="text/javascript">
+            function googleTranslateElementInit() {
+              new google.translate.TranslateElement({pageLanguage: 'en',includedLanguages : 'en,hi,mr,bn,ml,ta,te',layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+            }
+            </script>
+        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Feed Ration Formulation</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="/feed-options">Feed Options</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/cost">Cost Estimation</a></li>
+                        <li class="nav-item">
+                            <div id="google_translate_element" class="nav-link"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container my-5">
+        <div class="calc">
+        <h1 class="text-center mb-4">Calculate Nutrient Requirements</h1>
+        </div>
+        <form id="nutrition-form">
+            <div class="mb-3">
+                <label for="animal-type" class="form-label">Animal Type:</label>
+                <select id="animal-type" name="animal-type" class="form-select" required>
+                    <option value="cattle">Cattle</option>
+                    <option value="poultry">Poultry</option>
+                    <option value="goat">Goat</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="age" class="form-label">Age (Years):</label>
+                <input type="number" id="age" name="age" class="form-control" step="0.01" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="weight" class="form-label">Weight (kg):</label>
+                <input type="number" id="weight" name="weight" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="activity" class="form-label">Activity Level:</label>
+                <select id="activity" name="activity" class="form-select" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+
+            <button type="submit" class="cta-button">Submit</button>
+        </form>
+
+        <div id="results" class="mt-4" style="display:none;">
+            <h3 class="text-center">Calculated Nutrient Requirements</h3>
+            <p id="nutrient-output" class="text-center"></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Feed Ration Formulation</p>
+    </footer>
+
+    <!-- Bootstrap JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById('nutrition-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {
+                animal_type: formData.get('animal-type'),
+                weight: parseFloat(formData.get('weight')),
+                activity: formData.get('activity')
+            };
+
+            fetch('/animal-requirements', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)  // Send the data as JSON
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert("Error: " + data.error);
+                } else {
+                    document.getElementById('results').style.display = 'block';
+                    document.getElementById('nutrient-output').innerText = `Protein: ${data.protein} g, Fiber: ${data.fiber} g`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

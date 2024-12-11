@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Cattle Nutrition Calculator</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Cattle Nutrition Calculator</h1>
+        <form id="nutrition-form">
+            <label for="age">Age (in years):</label>
+            <input type="number" id="age" required>
+            
+            <label for="weight">Weight (in kg):</label>
+            <input type="number" id="weight" required>
+            
+            <label for="state">State:</label>
+            <select id="state" required>
+                <option value="young">Young</option>
+                <option value="adult">Adult</option>
+                <option value="pregnant">Pregnant</option>
+            </select>
+            
+            <button type="submit">Calculate</button>
+        </form>
+        
+        <div id="results" style="display:none;">
+            <h2>Results</h2>
+            <p id="nutrients"></p>
+            <p id="cost"></p>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
